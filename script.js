@@ -194,6 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.innerWidth <= 768) {
         initializeMobileMenu();
     }
+
+    // Create and setup fullscreen viewer
+    createFullscreenViewer();
+    setupCarouselImageClicks();
 });
 
 // Smooth scrolling for navigation links
@@ -302,4 +306,184 @@ document.querySelectorAll('.application-item, .advantage-item').forEach(item => 
     item.addEventListener('mouseleave', () => {
         item.style.transform = 'translateY(0)';
     });
-}); 
+});
+
+// Facebook Pixel Event Tracking
+function trackPixelEvent(eventName, params = {}) {
+    if (typeof fbq !== 'undefined') {
+        fbq('track', eventName, params);
+    }
+}
+
+// Track contact button clicks
+document.querySelectorAll('a[href="#contact"], .btn.primary').forEach(button => {
+    button.addEventListener('click', () => {
+        trackPixelEvent('Contact');
+    });
+});
+
+// Track specific section views using Intersection Observer
+const pixelObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const sectionId = entry.target.id;
+            if (sectionId) {
+                switch(sectionId) {
+                    case 'specs':
+                        trackPixelEvent('ViewContent', {content_name: 'specifications'});
+                        break;
+                    case 'applications':
+                        trackPixelEvent('ViewContent', {content_name: 'applications'});
+                        break;
+                    case 'availability':
+                        trackPixelEvent('ViewContent', {content_name: 'availability'});
+                        break;
+                }
+            }
+            pixelObserver.unobserve(entry.target);
+        }
+    });
+}, {threshold: 0.7});
+
+// Observe important sections for pixel tracking
+['specs', 'applications', 'availability'].forEach(id => {
+    const section = document.getElementById(id);
+    if (section) {
+        pixelObserver.observe(section);
+    }
+});
+
+// Track PDF download
+const pdfDownloadButton = document.querySelector('.pdf-download-button');
+if (pdfDownloadButton) {
+    pdfDownloadButton.addEventListener('click', () => {
+        trackPixelEvent('Download', {content_name: 'SGS Report'});
+    });
+}
+
+// Track messenger clicks
+document.querySelectorAll('.messenger-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const messengerType = button.classList.contains('telegram') ? 'Telegram' : 
+                             button.classList.contains('viber') ? 'Viber' : 'WhatsApp';
+        trackPixelEvent('InitiateCheckout', {messenger_type: messengerType});
+    });
+});
+
+// Fullscreen image viewer
+function createFullscreenViewer() {
+    // Create fullscreen viewer elements if they don't exist
+    if (!document.querySelector('.fullscreen-viewer')) {
+        const viewer = document.createElement('div');
+        viewer.className = 'fullscreen-viewer';
+        viewer.innerHTML = `
+            <div class="fullscreen-content">
+                <img src="" alt="Fullscreen image" class="fullscreen-image">
+                <button class="fullscreen-close">&times;</button>
+                <button class="fullscreen-prev">&lt;</button>
+                <button class="fullscreen-next">&gt;</button>
+            </div>
+        `;
+        document.body.appendChild(viewer);
+
+        // Close fullscreen viewer when clicking close button or outside the image
+        const closeBtn = viewer.querySelector('.fullscreen-close');
+        closeBtn.addEventListener('click', () => {
+            viewer.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Track closing fullscreen image viewer
+            trackPixelEvent('CloseView', {content_type: 'fullscreen_image'});
+        });
+
+        viewer.addEventListener('click', (e) => {
+            if (e.target === viewer) {
+                viewer.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Setup navigation buttons
+        const prevBtn = viewer.querySelector('.fullscreen-prev');
+        const nextBtn = viewer.querySelector('.fullscreen-next');
+        
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigateFullscreenImage(-1);
+        });
+        
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigateFullscreenImage(1);
+        });
+
+        // Handle keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!viewer.classList.contains('active')) return;
+            
+            if (e.key === 'Escape') {
+                viewer.classList.remove('active');
+                document.body.style.overflow = '';
+            } else if (e.key === 'ArrowLeft') {
+                navigateFullscreenImage(-1);
+            } else if (e.key === 'ArrowRight') {
+                navigateFullscreenImage(1);
+            }
+        });
+    }
+}
+
+// Current carousel context for fullscreen navigation
+let currentCarouselImages = [];
+let currentImageIndex = 0;
+
+// Navigate between images in fullscreen mode
+function navigateFullscreenImage(direction) {
+    if (currentCarouselImages.length <= 1) return;
+    
+    currentImageIndex = (currentImageIndex + direction + currentCarouselImages.length) % currentCarouselImages.length;
+    const fullscreenImage = document.querySelector('.fullscreen-image');
+    fullscreenImage.src = currentCarouselImages[currentImageIndex];
+}
+
+// Make all carousel images clickable to open in fullscreen
+function setupCarouselImageClicks() {
+    const carousels = document.querySelectorAll('.carousel');
+    
+    carousels.forEach(carousel => {
+        const images = carousel.querySelectorAll('.carousel-slide img');
+        
+        images.forEach((img, index) => {
+            img.style.cursor = 'pointer';
+            
+            img.addEventListener('click', () => {
+                // Save current carousel context for navigation
+                currentCarouselImages = Array.from(images).map(image => image.src);
+                currentImageIndex = index;
+                
+                // Show image in fullscreen viewer
+                const viewer = document.querySelector('.fullscreen-viewer');
+                const fullscreenImage = viewer.querySelector('.fullscreen-image');
+                
+                fullscreenImage.src = img.src;
+                viewer.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when fullscreen is active
+                
+                // Track opening fullscreen image viewer
+                trackPixelEvent('ViewContent', {content_type: 'fullscreen_image'});
+                
+                // Show/hide navigation buttons based on number of images
+                const prevBtn = viewer.querySelector('.fullscreen-prev');
+                const nextBtn = viewer.querySelector('.fullscreen-next');
+                
+                if (images.length <= 1) {
+                    prevBtn.style.display = 'none';
+                    nextBtn.style.display = 'none';
+                } else {
+                    prevBtn.style.display = '';
+                    nextBtn.style.display = '';
+                }
+            });
+        });
+    });
+} 
