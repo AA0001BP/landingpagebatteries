@@ -364,8 +364,7 @@ if (pdfDownloadButton) {
 // Track messenger clicks
 document.querySelectorAll('.messenger-btn').forEach(button => {
     button.addEventListener('click', () => {
-        const messengerType = button.classList.contains('telegram') ? 'Telegram' : 
-                             button.classList.contains('viber') ? 'Viber' : 'WhatsApp';
+        const messengerType = button.classList.contains('telegram') ? 'Telegram' : 'WhatsApp';
         trackPixelEvent('InitiateCheckout', {messenger_type: messengerType});
     });
 });
