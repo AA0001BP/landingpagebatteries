@@ -1492,8 +1492,7 @@ img {
 
 /* Accessibility improvements */
 :focus {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
+    outline: none;
 }
 
 .visually-hidden {
@@ -1637,4 +1636,371 @@ img {
 
 .carousel-slide img:hover {
     transform: scale(1.05);
+}
+
+/* Comparison Section */
+#comparison .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.comparison-content {
+    background-color: var(--white);
+    padding: 60px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    margin-top: 30px;
+}
+
+.comparison-content p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+.comparison-list {
+    list-style: none;
+    margin: 30px 0;
+    padding-left: 30px;
+}
+
+.comparison-list li {
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-color);
+}
+
+.comparison-list li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .comparison-content {
+        padding: 30px;
+    }
+    
+    .comparison-content p, 
+    .comparison-list li {
+        font-size: 16px;
+    }
+    
+    .comparison-list {
+        padding-left: 15px;
+    }
+}
+
+/* Practical Testing Section */
+.practical-testing-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    background-color: var(--white);
+    padding: 60px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+
+.practical-testing-text {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-color);
+}
+
+.practical-testing-text p {
+    margin-bottom: 20px;
+}
+
+.practical-testing-image {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition);
+}
+
+.practical-testing-image:hover {
+    transform: translateY(-5px);
+}
+
+.practical-testing-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 15px;
+}
+
+@media (max-width: 992px) {
+    .practical-testing-content {
+        padding: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .practical-testing-content {
+        grid-template-columns: 1fr;
+        padding: 30px;
+    }
+    
+    .practical-testing-text {
+        font-size: 16px;
+        order: 1;
+    }
+    
+    .practical-testing-image {
+        order: 0;
+        margin-bottom: 20px;
+    }
+}
+
+/* Pricing Section */
+#pricing .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pricing-tabs {
+    background-color: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    margin-top: 30px;
+    overflow: hidden;
+}
+
+.tabs-navigation {
+    display: flex;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.tab-button {
+    flex: 1;
+    background-color: transparent;
+    border: none;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+}
+
+.tab-button:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.tab-button.active {
+    color: var(--primary-color);
+}
+
+.tab-button.active:after {
+    transform: scaleX(1);
+}
+
+.tab-button:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.tab-content {
+    padding: 25px 40px;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.pricing-content {
+    padding: 0;
+}
+
+.pricing-block {
+    color: var(--text-color);
+}
+
+.pricing-block h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.pricing-block h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 15px 0 5px;
+}
+
+.pricing-block p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.price-tag {
+    font-size: 18px !important;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.pricing-list {
+    list-style: none;
+    padding-left: 15px;
+    margin: 0;
+}
+
+.pricing-list li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 8px;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.pricing-list li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .tab-content {
+        padding: 20px;
+    }
+    
+    .pricing-block h3 {
+        font-size: 18px;
+    }
+    
+    .pricing-block h4 {
+        font-size: 15px;
+    }
+    
+    .price-tag {
+        font-size: 16px !important;
+    }
+    
+    .tab-button {
+        font-size: 16px;
+        padding: 12px;
+    }
+}
+
+/* Add these new CSS rules for the pricing columns */
+.pricing-columns {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 15px;
+}
+
+.pricing-column {
+    flex: 1;
+    min-width: 0;
+}
+
+.price-tiers {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.pricing-note {
+    font-size: 14px !important;
+    font-style: italic;
+    color: #666;
+    margin-top: 5px;
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .pricing-columns {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .pricing-column {
+        margin-bottom: 10px;
+    }
+    
+    .pricing-note {
+        font-size: 13px !important;
+    }
+}
+
+/* OLX Link Styling */
+.olx-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    position: relative;
+    transition: var(--transition);
+}
+
+.olx-link:hover {
+    text-decoration: underline;
+}
+
+.olx-link:after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--primary-color);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.olx-link:hover:after {
+    transform: scaleX(1);
+}
+
+/* Remove focus outline */
+button:focus,
+a:focus,
+.tab-button:focus,
+.btn:focus,
+.lang-btn:focus,
+.carousel-button:focus,
+.messenger-btn:focus,
+.mobile-menu-btn:focus,
+.olx-link:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Optional: Add a subtle focus style that doesn't use outlines */
+.btn:focus,
+.messenger-btn:focus,
+.tab-button:focus {
+    transform: translateY(-2px);
 } 
