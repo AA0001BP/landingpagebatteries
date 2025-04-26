@@ -27,7 +27,16 @@ const languageSwitcher = {
         
         // Update all translatable elements
         document.querySelectorAll('[data-uk]').forEach(element => {
-            element.textContent = element.dataset[lang];
+            const text = element.dataset[lang];
+            if (text) {
+                // Preserve line breaks by replacing them with <br> tags
+                if (text.includes('\n') || /\r|\r\n/.test(text)) {
+                    // Replace all types of line breaks with <br>
+                    element.innerHTML = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+                } else {
+                    element.textContent = text;
+                }
+            }
         });
         
         // Update meta tags
